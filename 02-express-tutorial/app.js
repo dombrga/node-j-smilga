@@ -1,39 +1,24 @@
 const express = require('express')
-const { products } = require('./data.js')
 const app = express()
+let { people } = require('./data.js')
 
 
-app.get('/', (req, res) => {
-  // res.json(products)
-  res.send('<h1>home page</h1><a href="/api/products">products</a>')
+app.use(express.static('./methods-public'))
+app.use(express.urlencoded({extended: false}))
+// app.use(express.json())
+
+app.get('/api/people', (req, res) => {
+  res.status(200).json({sucess: true, data: people})
 })
 
-app.get('/api/products', (req, res) => {
-  const newProducts = products.map(prod => {
-    const {id, name, image} = prod
-    return {id, name, image}
-  })
-  res.json(newProducts)
-})
-
-app.get('/api/products/:productId', (req, res) => {
-  const singleProd = products.find(prod => prod.id === parseInt(req.params.productId))
-  console.log('singles', singleProd)
+app.post('/api/people', (req, res) => {
   
-  if(!singleProd) return res.status(404).send('Product does not exist.')
-  return res.json(singleProd)
 })
 
-app.get('/api/products/:productId/reviews/:reviewId', (req, res) => {
-  console.log(req.params)
-  res.send('this is a review')
+app.post('/login', (req, res) => {
+  console.log(req.body)
+  res.send('posted')
 })
-
-app.get('/api/v1/query', (req, res) => {
-  console.log(req.query)
-  res.send('hello query')
-})
-
 
 app.listen(5000, () => {
   console.log('server is listening to port 5000...')
